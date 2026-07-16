@@ -487,7 +487,7 @@ function QuestionRows({d}){
       <span class="mono" style=${{fontWeight:700,color:hx(tt.diff),background:hx(tt.diff)+'1e',padding:'3px 10px',borderRadius:20,fontSize:12.5}}>snitt ${sign(tt.diff)}</span></div>
     ${d.questions.filter(q=>q.theme===tt.theme).map((q,qi)=>html`
       <div class="grid gap-3 items-center" key=${qi} style=${{gridTemplateColumns:'1fr 210px 78px',padding:'9px 0',borderTop:qi?'1px solid '+CLR.line:'none'}}>
-        <div class="dm" style=${{fontSize:12.5,color:CLR.ink}}>${q.q}<div style=${{fontSize:11,color:CLR.mut2,marginTop:2}}>n ${q.n_fore}→${q.n_efter}${(q.miss_fore+q.miss_efter)>0?' · '+(q.miss_fore+q.miss_efter)+' ej svar':''}</div></div>
+        <div class="dm" style=${{fontSize:12.5,color:CLR.ink}}>${q.q}</div>
         <div>${MiniBar({label:'maj',val:q.mean_fore,color:CLR.maj})}${MiniBar({label:'juli',val:q.mean_efter,color:hx(q.diff)})}</div>
         <div style=${{textAlign:'right'}}><span class="mono" style=${{fontWeight:700,color:hx(q.diff),background:hx(q.diff)+'1e',padding:'3px 9px',borderRadius:20,fontSize:12}}>${sign(q.diff)}</span>
           <div class="mono" style=${{fontSize:11,color:CLR.mut2,marginTop:3}}>${pctf(q.pct)}</div></div>
@@ -500,10 +500,10 @@ function ProjectView({d,name}){
   const di=hasF?d.index_efter-d.index_fore:null;
   return html`<div class="dm">
     <div class="mb-5" style=${{background:'#faf6ff',border:'1px solid '+CLR.line,borderLeft:'4px solid '+CLR.pink,borderRadius:12,padding:'12px 16px',fontSize:12.5,color:CLR.mut}}>
-      Visar endast projektet <b style=${{color:CLR.ink}}>${name}</b> · n ${(d.n_fore||0)}→${d.n_efter}.${d.n_efter<3?' Endast '+d.n_efter+' svar i juli — ej statistiskt tillforlitligt, visas pa begaran.':(d.n_efter<8?' Litet urval — tolka enskilda tal med forsiktighet.':'')}${hasF?'':' Ingen maj-data for detta projekt, visar bara juli.'}</div>
+      Visar endast projektet <b style=${{color:CLR.ink}}>${name}</b>.${d.n_efter<3?' Endast '+d.n_efter+' svar i juli — ej statistiskt tillforlitligt, visas pa begaran.':(d.n_efter<8?' Litet urval — tolka enskilda tal med forsiktighet.':'')}${hasF?'':' Ingen maj-data for detta projekt, visar bara juli.'}</div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
-      <${Kpi} lbl="Index maj" val=${hasF?fmt(d.index_fore):'–'} foot=${'n='+(d.n_fore||0)}/>
-      <${Kpi} lbl="Index juli" val=${fmt(d.index_efter)} foot=${'n='+d.n_efter} color=${hx(di)}/>
+      <${Kpi} lbl="Index maj" val=${hasF?fmt(d.index_fore):'–'} foot="maj 2026"/>
+      <${Kpi} lbl="Index juli" val=${fmt(d.index_efter)} foot="juli 2026" color=${hx(di)}/>
       <${Kpi} lbl="Förändring" val=${hasF?sign(di):'–'} foot=${hasF?pctf(di/d.index_fore*100)+' mot maj':'ingen maj-data'} color=${hx(di)}/>
       <${Kpi} lbl="Svarande" val=${(d.n_fore||0)+' → '+d.n_efter} foot="maj → juli"/>
     </div>
@@ -532,8 +532,8 @@ function TeamView({d}){
   return html`<div class="dm">
     <!-- KPIs -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
-      <${Kpi} lbl="Trivselindex maj" val=${fmt(d.index_fore)} foot=${'n='+d.n_fore}/>
-      <${Kpi} lbl="Trivselindex juli" val=${fmt(d.index_efter)} foot=${'n='+d.n_efter} color=${hx(di)}/>
+      <${Kpi} lbl="Trivselindex maj" val=${fmt(d.index_fore)} foot="maj 2026"/>
+      <${Kpi} lbl="Trivselindex juli" val=${fmt(d.index_efter)} foot="juli 2026" color=${hx(di)}/>
       <${Kpi} lbl="Total förändring" val=${sign(di)} foot=${pctf(di/d.index_fore*100)+' mot maj'} color=${hx(di)}/>
       <${Kpi} lbl="Antal svarande" val=${d.n_fore+' → '+d.n_efter} foot="maj → juli"/>
     </div>
@@ -601,7 +601,7 @@ function TeamView({d}){
           <span class="mono" style=${{fontWeight:700,color:hx(tt.diff),background:hx(tt.diff)+'1e',padding:'3px 10px',borderRadius:20,fontSize:12.5}}>snitt ${sign(tt.diff)}</span></div>
         ${d.questions.filter(q=>q.theme===tt.theme).map((q,qi)=>html`
           <div class="grid gap-3 items-center" key=${qi} style=${{gridTemplateColumns:'1fr 210px 78px',padding:'9px 0',borderTop:qi?'1px solid '+CLR.line:'none'}}>
-            <div class="dm" style=${{fontSize:12.5,color:CLR.ink}}>${q.q}<div style=${{fontSize:11,color:CLR.mut2,marginTop:2}}>n ${q.n_fore}→${q.n_efter}${(q.miss_fore+q.miss_efter)>0?' · '+(q.miss_fore+q.miss_efter)+' ej svar':''}</div></div>
+            <div class="dm" style=${{fontSize:12.5,color:CLR.ink}}>${q.q}</div>
             <div>${MiniBar({label:'maj',val:q.mean_fore,color:CLR.maj})}${MiniBar({label:'juli',val:q.mean_efter,color:hx(q.diff)})}</div>
             <div style=${{textAlign:'right'}}><span class="mono" style=${{fontWeight:700,color:hx(q.diff),background:hx(q.diff)+'1e',padding:'3px 9px',borderRadius:20,fontSize:12}}>${sign(q.diff)}</span>
               <div class="mono" style=${{fontSize:11,color:CLR.mut2,marginTop:3}}>${pctf(q.pct)}</div></div>
@@ -667,7 +667,7 @@ function App(){
       <select value=${proj} onChange=${e=>setProj(e.target.value)} class="dm"
         style=${{padding:'9px 14px',borderRadius:10,border:'1px solid '+CLR.line,background:'#fff',color:CLR.ink,fontSize:14,fontWeight:600,cursor:'pointer',minWidth:220}}>
         <option>Alla projekt</option>
-        ${Object.keys(DATA[team].projects).map(p=>html`<option key=${p} value=${p}>${p} (n=${DATA[team].projects[p].n_efter})</option>`)}
+        ${Object.keys(DATA[team].projects).map(p=>html`<option key=${p} value=${p}>${p}</option>`)}
       </select>
       ${proj!=='Alla projekt'?html`<button onClick=${()=>setProj('Alla projekt')} class="dm" style=${{padding:'8px 14px',borderRadius:10,border:'1px solid '+CLR.line,background:'#faf6ff',color:CLR.mut,fontSize:13,cursor:'pointer'}}>× Rensa filter</button>`:''}
     </div>`:''}

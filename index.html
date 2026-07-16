@@ -500,8 +500,7 @@ function QuestionRows({d}){
       <div class="grid gap-3 items-center" key=${qi} style=${{gridTemplateColumns:'1fr 210px 78px',padding:'9px 0',borderTop:qi?'1px solid '+CLR.line:'none'}}>
         <div class="dm" style=${{fontSize:12.5,color:CLR.ink}}>${q.q}</div>
         <div>${MiniBar({label:'maj',val:q.mean_fore,color:CLR.maj})}${MiniBar({label:'juli',val:q.mean_efter,color:hx(q.diff)})}</div>
-        <div style=${{textAlign:'right'}}><span class="mono" style=${{fontWeight:700,color:hx(q.diff),background:hx(q.diff)+'1e',padding:'3px 9px',borderRadius:20,fontSize:12}}>${sign(q.diff)}</span>
-          <div class="mono" style=${{fontSize:11,color:CLR.mut2,marginTop:3}}>${pctf(q.pct)}</div></div>
+        <div style=${{textAlign:'right'}}><span class="mono" style=${{fontWeight:700,color:hx(q.diff),background:hx(q.diff)+'1e',padding:'3px 9px',borderRadius:20,fontSize:12}}>${sign(q.diff)}</span></div>
       </div>`)}
   </${Card}>`);
 }
@@ -529,7 +528,7 @@ function ProjectView({d,name}){
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
       <${Kpi} lbl="Index maj" val=${hasF?fmt(d.index_fore):'–'} foot="maj 2026"/>
       <${Kpi} lbl="Index juli" val=${fmt(d.index_efter)} foot="juli 2026" color=${hx(di)}/>
-      <${Kpi} lbl="Förändring" val=${hasF?sign(di):'–'} foot=${hasF?pctf(di/d.index_fore*100)+' mot maj':'ingen maj-data'} color=${hx(di)}/>
+      <${Kpi} lbl="Förändring" val=${hasF?sign(di):'–'} foot=${hasF?'sedan maj':'ingen maj-data'} color=${hx(di)}/>
       <${Kpi} lbl="Svarande" val=${(d.n_fore||0)+' → '+d.n_efter} foot="maj → juli"/>
     </div>
     ${(d.flags&&d.flags.length)?html`<div class="mb-8"><${H2}>Flaggningar — ${name}</${H2}>
@@ -562,7 +561,7 @@ function TeamView({d}){
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
       <${Kpi} lbl="Trivselindex maj" val=${fmt(d.index_fore)} foot="maj 2026"/>
       <${Kpi} lbl="Trivselindex juli" val=${fmt(d.index_efter)} foot="juli 2026" color=${hx(di)}/>
-      <${Kpi} lbl="Total förändring" val=${sign(di)} foot=${pctf(di/d.index_fore*100)+' mot maj'} color=${hx(di)}/>
+      <${Kpi} lbl="Total förändring" val=${sign(di)} foot="sedan maj" color=${hx(di)}/>
       <${Kpi} lbl="Antal svarande" val=${d.n_fore+' → '+d.n_efter} foot="maj → juli"/>
     </div>
 
@@ -631,8 +630,7 @@ function TeamView({d}){
           <div class="grid gap-3 items-center" key=${qi} style=${{gridTemplateColumns:'1fr 210px 78px',padding:'9px 0',borderTop:qi?'1px solid '+CLR.line:'none'}}>
             <div class="dm" style=${{fontSize:12.5,color:CLR.ink}}>${q.q}</div>
             <div>${MiniBar({label:'maj',val:q.mean_fore,color:CLR.maj})}${MiniBar({label:'juli',val:q.mean_efter,color:hx(q.diff)})}</div>
-            <div style=${{textAlign:'right'}}><span class="mono" style=${{fontWeight:700,color:hx(q.diff),background:hx(q.diff)+'1e',padding:'3px 9px',borderRadius:20,fontSize:12}}>${sign(q.diff)}</span>
-              <div class="mono" style=${{fontSize:11,color:CLR.mut2,marginTop:3}}>${pctf(q.pct)}</div></div>
+            <div style=${{textAlign:'right'}}><span class="mono" style=${{fontWeight:700,color:hx(q.diff),background:hx(q.diff)+'1e',padding:'3px 9px',borderRadius:20,fontSize:12}}>${sign(q.diff)}</span></div>
           </div>`)}
       </${Card}>`)}
     </div>

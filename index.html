@@ -398,31 +398,42 @@ function tooltipStyle(){return {contentStyle:{fontFamily:'DM Sans',fontSize:12,b
 function GroupedThemes({themes}){
   const dd=themes.map(t=>({name:SHORT[t.theme],maj:t.mean_fore==null?null:+t.mean_fore.toFixed(2),juli:t.mean_efter==null?null:+t.mean_efter.toFixed(2)}));
   return html`<${ResponsiveContainer} width="100%" height=${300}>
-    <${BarChart} data=${dd} margin=${{top:22,right:8,left:-14,bottom:6}} barGap=${4} barCategoryGap=${"22%"}>
+    <${BarChart} data=${dd} margin=${{top:30,right:8,left:-14,bottom:6}} barGap=${4} barCategoryGap=${"22%"}>
       <defs><linearGradient id="gjuli" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#CB29B4"/><stop offset="1" stopColor="#7a1c93"/></linearGradient></defs>
       <${CartesianGrid} vertical=${false} stroke=${CLR.line} strokeDasharray="2 4"/>
       <${XAxis} dataKey="name" tickLine=${false} axisLine=${false} tick=${{fontSize:11.5,fill:CLR.ink,fontFamily:'DM Sans'}} interval=${0}/>
       <${YAxis} domain=${[1,5]} ticks=${[1,2,3,4,5]} tickLine=${false} axisLine=${false} width=${34} tick=${{fontSize:11,fill:CLR.mut2}}/>
       <${Tooltip} ...${tooltipStyle()} cursor=${{fill:'rgba(70,24,134,.05)'}}/>
-      <${Bar} name="maj" dataKey="maj" fill=${CLR.maj} radius=${[5,5,0,0]}>
+      <${Bar} name="maj" dataKey="maj" fill=${CLR.maj} radius=${[5,5,0,0]} isAnimationActive=${false}>
         <${LabelList} dataKey="maj" position="top" style=${{fontSize:10.5,fill:CLR.mut,fontFamily:'JetBrains Mono'}}/></${Bar}>
-      <${Bar} name="juli" dataKey="juli" fill="url(#gjuli)" radius=${[5,5,0,0]}>
+      <${Bar} name="juli" dataKey="juli" fill="url(#gjuli)" radius=${[5,5,0,0]} isAnimationActive=${false}>
         <${LabelList} dataKey="juli" position="top" style=${{fontSize:11,fill:CLR.pink,fontWeight:700,fontFamily:'JetBrains Mono'}}/></${Bar}>
     </${BarChart}></${ResponsiveContainer}>`;
 }
 
+function ChLabel(props){
+  const {x,y,width,height,value}=props;
+  if(value==null) return null;
+  const pos=value>=0;
+  const tx=pos?(x+width+6):(x-6);
+  return html`<text x=${tx} y=${y+height/2+4} text-anchor=${pos?'start':'end'}
+    style=${{fontSize:11,fontWeight:700,fontFamily:'JetBrains Mono',fill:hx(value)}}>${(value>=0?'+':'')+value.toFixed(2)}</text>`;
+}
 function ChangeChart({themes}){
   const dd=themes.filter(t=>t.diff!=null).map(t=>({name:SHORT[t.theme],diff:+t.diff.toFixed(2)}));
-  return html`<${ResponsiveContainer} width="100%" height=${themes.length*40+30}>
-    <${BarChart} layout="vertical" data=${dd} margin=${{top:6,right:52,left:22,bottom:6}}>
+  const mAbs=Math.max(0.5,...dd.map(d=>Math.abs(d.diff)));
+  const m=Math.ceil(mAbs*1.28*10)/10;
+  const ticks=[-m,-m/2,0,m/2,m].map(v=>+v.toFixed(2));
+  return html`<${ResponsiveContainer} width="100%" height=${themes.length*40+34}>
+    <${BarChart} layout="vertical" data=${dd} margin=${{top:6,right:58,left:22,bottom:6}}>
       <${CartesianGrid} horizontal=${false} stroke=${CLR.line}/>
-      <${XAxis} type="number" domain=${[-0.5,0.5]} ticks=${[-0.5,-0.25,0,0.25,0.5]} tickLine=${false} axisLine=${false} tick=${{fontSize:10.5,fill:CLR.mut2}}/>
+      <${XAxis} type="number" domain=${[-m,m]} ticks=${ticks} tickLine=${false} axisLine=${false} tick=${{fontSize:10.5,fill:CLR.mut2}}/>
       <${YAxis} type="category" dataKey="name" width=${128} tickLine=${false} axisLine=${false} tick=${{fontSize:11.5,fill:CLR.ink,fontFamily:'DM Sans'}}/>
       <${Tooltip} ...${tooltipStyle()} cursor=${{fill:'rgba(70,24,134,.05)'}}/>
-      <${Bar} dataKey="diff" radius=${4} barSize=${18}>
+      <${Bar} dataKey="diff" radius=${4} barSize=${18} isAnimationActive=${false}>
         ${dd.map((t,i)=>html`<${Cell} key=${i} fill=${hx(t.diff)}/>`)}
-        <${LabelList} dataKey="diff" position="right" formatter=${v=>(v>=0?'+':'')+v.toFixed(2)} style=${{fontSize:11,fontWeight:700,fontFamily:'JetBrains Mono'}}/>
+        <${LabelList} dataKey="diff" content=${ChLabel}/>
       </${Bar}>
     </${BarChart}></${ResponsiveContainer}>`;
 }
@@ -433,9 +444,9 @@ function HBar({rows,domain,colorFn,unit}){
     <${BarChart} layout="vertical" data=${dd} margin=${{top:4,right:46,left:8,bottom:4}}>
       <${CartesianGrid} horizontal=${false} stroke=${CLR.line}/>
       <${XAxis} type="number" domain=${domain} tickLine=${false} axisLine=${false} tick=${{fontSize:10.5,fill:CLR.mut2}}/>
-      <${YAxis} type="category" dataKey="name" width=${140} tickLine=${false} axisLine=${false} tick=${{fontSize:11.5,fill:CLR.ink,fontFamily:'DM Sans'}}/>
+      <${YAxis} type="category" dataKey="name" width=${152} tickLine=${false} axisLine=${false} tick=${{fontSize:11,fill:CLR.ink,fontFamily:'DM Sans'}}/>
       <${Tooltip} ...${tooltipStyle()} cursor=${{fill:'rgba(70,24,134,.05)'}}/>
-      <${Bar} dataKey="v" radius=${4} barSize=${15}>
+      <${Bar} dataKey="v" radius=${4} barSize=${15} isAnimationActive=${false}>
         ${dd.map((t,i)=>html`<${Cell} key=${i} fill=${colorFn(t.v)}/>`)}
         <${LabelList} dataKey="v" position="right" formatter=${v=>v.toFixed(2)} style=${{fontSize:10.5,fontWeight:700,fill:CLR.ink,fontFamily:'JetBrains Mono'}}/>
       </${Bar}>
